@@ -3,315 +3,708 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Examen: Contrastes de Color de Johannes Itten</title>
+    <title>Cuestionario: Los Contrastes de Johannes Itten</title>
+    <!-- Tailwind CSS para diseño moderno y responsivo -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root {
-            --primary-color: #2c3e50;
-            --accent-color: #e74c3c;
-            --bg-color: #f8f9fa;
-            --card-bg: #ffffff;
-            --text-color: #333333;
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #0b0f19; 
+            color: #f1f5f9;
         }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
+        .contrast-card { 
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); 
         }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: var(--card-bg);
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        .active-glow {
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.25);
         }
-
-        h1 {
-            color: var(--primary-color);
-            text-align: center;
-            border-bottom: 3px solid var(--accent-color);
-            padding-bottom: 10px;
-            margin-bottom: 30px;
+        @keyframes spin-slow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
-
-        .instructions {
-            background: #edf2f7;
-            padding: 15px;
-            border-left: 5px solid var(--primary-color);
-            border-radius: 4px;
-            margin-bottom: 30px;
-        }
-
-        .question {
-            margin-bottom: 30px;
-            padding: 20px;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            background: #fff;
-        }
-
-        .question p {
-            font-weight: 600;
-            font-size: 1.1em;
-            margin-top: 0;
-            color: var(--primary-color);
-        }
-
-        .options {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .option {
-            display: flex;
-            align-items: center;
-            padding: 12px;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .option:hover {
-            background-color: #f1f5f9;
-            border-color: #94a3b8;
-        }
-
-        .option input {
-            margin-right: 15px;
-            transform: scale(1.2);
-        }
-
-        .btn-submit {
-            display: block;
-            width: 100%;
-            background-color: var(--accent-color);
-            color: white;
-            border: none;
-            padding: 15px;
-            font-size: 1.2em;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-            margin-top: 20px;
-        }
-
-        .btn-submit:hover {
-            background-color: #c0392b;
-        }
-
-        #result-container {
-            display: none;
-            margin-top: 30px;
-            padding: 30px;
-            border-radius: 8px;
-            text-align: center;
-            animation: fadeIn 0.5s ease-in-out;
-        }
-
-        .success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .regular {
-            background-color: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeeba;
-        }
-
-        .score-display {
-            font-size: 3em;
-            font-weight: bold;
-            margin: 15px 0;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .animate-spin-slow {
+            animation: spin-slow 20s linear infinite;
         }
     </style>
 </head>
-<body>
+<body class="p-4 md:p-8 min-h-screen flex items-center justify-center">
 
-<div class="container">
-    <h1>Examen de Artes Visuales: Los 7 Contrastes de Itten</h1>
-    
-    <div class="instructions">
-        <p><strong>Instrucciones:</strong> Lee con atención cada reactivo y selecciona la opción correcta. El examen consta de 10 preguntas. Cada acierto equivale a 10 puntos. Al finalizar, presiona el botón para calcular tu puntaje.</p>
+    <div id="app" class="w-full max-w-4xl bg-slate-900 rounded-3xl border border-slate-800 shadow-2xl overflow-hidden my-4">
+        
+        <!-- Header del Cuestionario -->
+        <div class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 p-6 md:p-8 text-white relative">
+            <div class="absolute inset-0 bg-black opacity-10 mix-blend-overlay"></div>
+            <div class="relative z-10">
+                <span class="bg-white/20 text-white text-[10px] md:text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full backdrop-blur-sm">
+                    Artes Visuales • Nivel Avanzado (15-17 años)
+                </span>
+                <h1 class="text-2xl md:text-3xl font-black mt-3 tracking-tight">Cuestionario: Los Contrastes de Johannes Itten</h1>
+                <p class="text-indigo-100/90 text-sm md:text-base mt-1 font-medium">Domina la teoría del color y la percepción cromática de la Bauhaus</p>
+            </div>
+        </div>
+
+        <!-- Barra de Progreso Dinámica -->
+        <div class="w-full bg-slate-950 h-2 flex">
+            <div id="progress" class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 h-2 transition-all duration-500 ease-out" style="width: 0%"></div>
+        </div>
+
+        <!-- Área de Contenido Principal -->
+        <div id="quiz-container" class="p-5 md:p-8">
+            
+            <!-- Pantalla de Inicio -->
+            <div id="start-screen" class="text-center space-y-6 py-4">
+                <div class="flex justify-center">
+                    <svg class="w-32 h-32 animate-spin-slow" viewBox="0 0 200 200">
+                        <path d="M100,20 A80,80 0 0,1 180,100 L140,100 A40,40 0 0,0 100,60 Z" fill="#ef4444"/>
+                        <path d="M180,100 A80,80 0 0,1 100,180 L100,140 A40,40 0 0,0 140,100 Z" fill="#3b82f6"/>
+                        <path d="M100,180 A80,80 0 0,1 20,100 L60,100 A40,40 0 0,0 100,140 Z" fill="#facc15"/>
+                        <path d="M20,100 A80,80 0 0,1 100,20 L100,60 A40,40 0 0,0 60,100 Z" fill="#10b981"/>
+                        <circle cx="100" cy="100" r="30" fill="#0f172a" />
+                        <circle cx="100" cy="100" r="15" fill="#f1f5f9" />
+                    </svg>
+                </div>
+                
+                <div class="max-w-xl mx-auto space-y-3">
+                    <h2 class="text-2xl font-bold text-white">¿Listos para el desafío cromático, artistas?</h2>
+                    <p class="text-slate-400 text-sm md:text-base leading-relaxed">
+                        Este examen consta de <strong>15 preguntas</strong> interactivas basadas rigurosamente en los principios ópticos de Johannes Itten (10 de opción múltiple y 5 de relacionar conceptos). Cada pregunta cuenta con un gráfico educativo de apoyo.
+                    </p>
+                    <div class="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50 text-left text-xs space-y-2 max-w-md mx-auto">
+                        <div class="flex items-center gap-2 text-indigo-400 font-bold">
+                            <span class="w-2 h-2 rounded-full bg-indigo-500"></span> Reglas del Examen:
+                        </div>
+                        <p class="text-slate-300">1. Cada respuesta correcta equivale a 1 punto (Total: 15 puntos).</p>
+                        <p class="text-slate-300">2. Recibirás retroalimentación teórica obligatoria antes de avanzar.</p>
+                        <p class="text-slate-300">3. Solo tienes un intento por sesión para simular una evaluación real de taller.</p>
+                    </div>
+                </div>
+                
+                <button onclick="quiz.start()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-8 py-3.5 rounded-xl font-bold transition shadow-lg shadow-indigo-500/20 active:scale-95 text-sm md:text-base">
+                    Comenzar Cuestionario
+                </button>
+            </div>
+
+            <!-- Área de Preguntas -->
+            <div id="question-area" class="hidden space-y-6">
+                <div class="flex justify-between items-center bg-slate-800/40 p-3 rounded-xl border border-slate-800">
+                    <span id="question-number" class="text-xs font-black text-indigo-400 uppercase tracking-widest">Pregunta 1 de 15</span>
+                    <span id="score-tracker" class="bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 px-3 py-1 rounded-full text-xs font-black">
+                        Puntos: 0
+                    </span>
+                </div>
+
+                <!-- Soporte Visual: Gráficos explicativos de teoría del color -->
+                <div id="visual-aid" class="w-full flex flex-col items-center justify-center bg-slate-950 p-4 md:p-6 rounded-2xl border border-slate-800/80 shadow-inner relative overflow-hidden min-h-[220px]">
+                    <!-- Aquí se inyectan dinámicamente los gráficos SVG -->
+                </div>
+
+                <div class="space-y-4">
+                    <h3 id="question-text" class="text-base md:text-lg font-bold text-white leading-snug"></h3>
+                    <div id="options-grid" class="grid gap-3">
+                        <!-- Las opciones se inyectan dinámicamente -->
+                    </div>
+                </div>
+
+                <!-- Sección de Retroalimentación del docente -->
+                <div id="feedback" class="mt-6 p-5 rounded-2xl border hidden">
+                    <div class="flex items-start gap-3">
+                        <div id="feedback-icon" class="text-2xl mt-0.5"></div>
+                        <div class="space-y-1">
+                            <p id="feedback-title" class="font-bold text-base"></p>
+                            <p id="feedback-text" class="text-sm opacity-90 leading-relaxed"></p>
+                        </div>
+                    </div>
+                    <button id="next-btn" onclick="quiz.next()" class="mt-4 w-full bg-slate-800 hover:bg-slate-750 text-white font-bold py-3 rounded-xl border border-slate-700 transition active:scale-[0.98] text-sm">
+                        Siguiente Pregunta
+                    </button>
+                </div>
+            </div>
+
+            <!-- Pantalla de Resultados Finales -->
+            <div id="result-screen" class="hidden text-center space-y-6 py-6">
+                <h2 class="text-3xl font-black text-white">Evaluación Finalizada</h2>
+                
+                <div class="py-4">
+                    <div class="inline-block p-10 rounded-full bg-slate-800/40 border-4 border-indigo-500 relative">
+                        <span id="final-score" class="text-6xl font-black text-indigo-400">0</span>
+                        <span class="text-2xl text-slate-500"> / 15</span>
+                    </div>
+                </div>
+
+                <div class="max-w-md mx-auto space-y-3">
+                    <p id="result-title" class="text-xl font-bold text-white"></p>
+                    <p id="result-msg" class="text-slate-400 text-sm leading-relaxed"></p>
+                </div>
+
+                <div class="pt-6 border-t border-slate-800 max-w-sm mx-auto">
+                    <button onclick="location.reload()" class="bg-indigo-600/10 hover:bg-indigo-600/20 text-indigo-400 border border-indigo-500/20 px-6 py-2.5 rounded-lg text-xs font-bold tracking-wider uppercase transition">
+                        Reiniciar Evaluador
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <form id="quiz-form">
-        <div class="question">
-            <p>1. ¿Cuál de los contrastes se produce al utilizar colores puros y saturados en su máxima intensidad lumínica?</p>
-            <div class="options">
-                <label class="option"><input type="radio" name="q1" value="A"> A) Contraste de calidad</label>
-                <label class="option"><input type="radio" name="q1" value="B"> B) Contraste del color en sí mismo</label>
-                <label class="option"><input type="radio" name="q1" value="C"> C) Contraste simultáneo</label>
-            </div>
-        </div>
+    <script>
+        // Diccionario de soporte gráfico vectorial (SVG) para cada una de las 15 preguntas
+        const VISUALS = {
+            // Q1: Diagrama del Círculo Cromático (Cuestiones del número total de contrastes)
+            1: `<svg class="w-48 h-48" viewBox="0 0 120 120">
+                    <circle cx="60" cy="60" r="50" fill="none" stroke="#1e293b" stroke-width="12"/>
+                    <path d="M60,10 A50,50 0 0,1 85,16.7 L77.5,29.7 A35,35 0 0,0 60,25 Z" fill="#ef4444"/> <!-- Rojo -->
+                    <path d="M85,16.7 A50,50 0 0,1 103.3,35 L90.3,42.5 A35,35 0 0,0 77.5,29.7 Z" fill="#f97316"/> <!-- Naranja -->
+                    <path d="M103.3,35 A50,50 0 0,1 110,60 L95,60 A35,35 0 0,0 90.3,42.5 Z" fill="#eab308"/> <!-- Amarillo -->
+                    <path d="M110,60 A50,50 0 0,1 103.3,85 L90.3,77.5 A35,35 0 0,0 95,60 Z" fill="#84cc16"/> <!-- Verde claro -->
+                    <path d="M103.3,85 A50,50 0 0,1 85,103.3 L77.5,90.3 A35,35 0 0,0 90.3,77.5 Z" fill="#10b981"/> <!-- Verde oscuro -->
+                    <path d="M85,103.3 A50,50 0 0,1 60,110 L60,95 A35,35 0 0,0 77.5,90.3 Z" fill="#06b6d4"/> <!-- Turquesa -->
+                    <path d="M60,110 A50,50 0 0,1 35,103.3 L42.5,90.3 A35,35 0 0,0 60,95 Z" fill="#3b82f6"/> <!-- Azul -->
+                    <path d="M35,103.3 A50,50 0 0,1 16.7,85 L29.7,77.5 A35,35 0 0,0 42.5,90.3 Z" fill="#6366f1"/> <!-- Añil -->
+                    <path d="M16.7,85 A50,50 0 0,1 10,60 L25,60 A35,35 0 0,0 29.7,77.5 Z" fill="#8b5cf6"/> <!-- Violeta -->
+                    <path d="M10,60 A50,50 0 0,1 16.7,35 L29.7,42.5 A35,35 0 0,0 25,60 Z" fill="#d946ef"/> <!-- Magenta -->
+                    <path d="M16.7,35 A50,50 0 0,1 35,16.7 L42.5,29.7 A35,35 0 0,0 29.7,42.5 Z" fill="#ec4899"/> <!-- Rosa -->
+                    <path d="M35,16.7 A50,50 0 0,1 60,10 L60,25 A35,35 0 0,0 42.5,29.7 Z" fill="#f43f5e"/> <!-- Carmín -->
+                    <circle cx="60" cy="60" r="18" fill="#0f172a"/>
+                    <text x="60" y="64" fill="#6366f1" font-size="10" font-weight="bold" text-anchor="middle">7</text>
+                </svg>`,
 
-        <div class="question">
-            <p>2. Para lograr la máxima expresión del "contraste del color en sí mismo", se requiere la presencia mínima de tres colores puros. ¿Qué tríada genera el efecto más fuerte y enérgico?</p>
-            <div class="options">
-                <label class="option"><input type="radio" name="q2" value="A"> A) Amarillo, rojo y azul</label>
-                <label class="option"><input type="radio" name="q2" value="B"> B) Verde, violeta y naranja</label>
-                <label class="option"><input type="radio" name="q2" value="C"> C) Blanco, negro y gris</label>
-            </div>
-        </div>
+            // Q2: Contraste de color en sí mismo (Saturación pura - tipo Piet Mondrian)
+            2: `<svg class="w-48 h-48 border border-slate-800" viewBox="0 0 100 100">
+                    <rect x="0" y="0" width="50" height="50" fill="#ff0000"/> <!-- Rojo puro -->
+                    <rect x="50" y="0" width="50" height="30" fill="#ffff00"/> <!-- Amarillo puro -->
+                    <rect x="50" y="30" width="50" height="70" fill="#0000ff"/> <!-- Azul puro -->
+                    <rect x="0" y="50" width="20" height="50" fill="#ffffff"/> 
+                    <rect x="20" y="50" width="30" height="50" fill="#000000"/> 
+                    <line x1="50" y1="0" x2="50" y2="100" stroke="#1e293b" stroke-width="4"/>
+                    <line x1="0" y1="50" x2="50" y2="50" stroke="#1e293b" stroke-width="4"/>
+                    <line x1="50" y1="30" x2="100" y2="30" stroke="#1e293b" stroke-width="4"/>
+                    <line x1="20" y1="50" x2="20" y2="100" stroke="#1e293b" stroke-width="4"/>
+                </svg>`,
 
-        <div class="question">
-            <p>3. ¿Qué contraste fundamental permite percibir las diferencias de luminosidad, volumen y claroscuro en una composición visual?</p>
-            <div class="options">
-                <label class="option"><input type="radio" name="q3" value="A"> A) Contraste sucesivo</label>
-                <label class="option"><input type="radio" name="q3" value="B"> B) Contraste de cantidad</label>
-                <label class="option"><input type="radio" name="q3" value="C"> C) Contraste claro-oscuro</label>
-            </div>
-        </div>
+            // Q3: Contraste Cálido-Frío (División térmica polarizada)
+            3: `<svg class="w-48 h-48 rounded-lg" viewBox="0 0 100 100">
+                    <rect x="0" y="0" width="50" height="100" fill="#ff4500"/>
+                    <circle cx="20" cy="50" r="15" fill="#facc15" opacity="0.9"/>
+                    <path d="M20,25 L20,30 M20,70 L20,75 M5,50 L10,50 M30,50 L35,50" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+                    <text x="25" y="90" fill="#ffffff" font-size="6" font-weight="bold" text-anchor="middle">CÁLIDO</text>
+                    
+                    <rect x="50" y="0" width="50" height="100" fill="#00ced1"/>
+                    <circle cx="80" cy="50" r="15" fill="#e0f2fe" opacity="0.4"/>
+                    <path d="M80,35 L80,65 M65,50 L95,50 M69,39 L91,61 M69,61 L91,39" stroke="#ffffff" stroke-width="1.5"/>
+                    <text x="75" y="90" fill="#ffffff" font-size="6" font-weight="bold" text-anchor="middle">FRÍO</text>
+                    <line x1="50" y1="0" x2="50" y2="100" stroke="#ffffff" stroke-width="2"/>
+                </svg>`,
 
-        <div class="question">
-            <p>4. Fisiológicamente, ¿cuáles son los dos colores que representan los polos extremos de la temperatura (calor y frío) en el círculo cromático de Itten?</p>
-            <div class="options">
-                <label class="option"><input type="radio" name="q4" value="A"> A) Amarillo y Violeta</label>
-                <label class="option"><input type="radio" name="q4" value="B"> B) Rojo anaranjado y Azul verdoso</label>
-                <label class="option"><input type="radio" name="q4" value="C"> C) Verde y Naranja</label>
-            </div>
-        </div>
+            // Q4: Claroscuro (Escala tonal progresiva y degradado tridimensional)
+            4: `<svg class="w-full max-w-xs h-28" viewBox="0 0 200 80">
+                    <g transform="translate(10, 45)">
+                        <rect x="0" y="0" width="24" height="20" fill="#ffffff" stroke="#334155" stroke-width="1"/>
+                        <rect x="24" y="0" width="24" height="20" fill="#cbd5e1" />
+                        <rect x="48" y="0" width="24" height="20" fill="#94a3b8" />
+                        <rect x="72" y="0" width="24" height="20" fill="#64748b" />
+                        <rect x="96" y="0" width="24" height="20" fill="#334155" />
+                        <rect x="120" y="0" width="24" height="20" fill="#0f172a" />
+                        <rect x="144" y="0" width="24" height="20" fill="#000000" />
+                    </g>
+                    <defs>
+                        <radialGradient id="sphereGrad" cx="30%" cy="30%" r="70%">
+                            <stop offset="0%" stop-color="#ffffff"/>
+                            <stop offset="50%" stop-color="#64748b"/>
+                            <stop offset="100%" stop-color="#020617"/>
+                        </radialGradient>
+                    </defs>
+                    <circle cx="110" cy="22" r="20" fill="url(#sphereGrad)" />
+                    <text x="110" y="78" fill="#94a3b8" font-size="6" text-anchor="middle">Contraste de Valor (Escala de Grises)</text>
+                </svg>`,
 
-        <div class="question">
-            <p>5. ¿Cómo se define el contraste de los complementarios?</p>
-            <div class="options">
-                <label class="option"><input type="radio" name="q5" value="A"> A) La yuxtaposición de dos colores opuestos en el círculo cromático que se intensifican mutuamente.</label>
-                <label class="option"><input type="radio" name="q5" value="B"> B) La mezcla de un color puro con blanco para cambiar su luminosidad.</label>
-                <label class="option"><input type="radio" name="q5" value="C"> C) El uso de colores que comparten una misma base tonal cercana.</label>
-            </div>
-        </div>
+            // Q5: Contraste de Complementarios (Vibración óptica de opuestos directos)
+            5: `<svg class="w-48 h-48" viewBox="0 0 100 100">
+                    <rect x="0" y="0" width="100" height="100" fill="#10b981"/> <!-- Verde puro -->
+                    <circle cx="50" cy="50" r="45" fill="none" stroke="#047857" stroke-width="1" stroke-dasharray="2 2"/>
+                    <circle cx="50" cy="50" r="32" fill="#ef4444"/> <!-- Rojo puro -->
+                    <polygon points="50,28 55,38 67,38 58,45 61,57 50,50 39,57 42,45 33,38 45,38" fill="#facc15" />
+                    <text x="50" y="80" fill="#ffffff" font-size="5.5" font-weight="black" text-anchor="middle" letter-spacing="0.5">VIBRACIÓN ÓPTICA</text>
+                </svg>`,
 
-        <div class="question">
-            <p>6. ¿A qué fenómeno óptico se refiere el "contraste simultáneo"?</p>
-            <div class="options">
-                <label class="option"><input type="radio" name="q6" value="A"> A) Al balance exacto en peso visual entre una zona pequeña y una grande.</label>
-                <label class="option"><input type="radio" name="q6" value="B"> B) Al hecho de que el ojo humano, ante un color saturado, exige e genera dinámicamente su complementario en las zonas grises adyacentes.</label>
-                <label class="option"><input type="radio" name="q6" value="C"> C) A la pérdida de brillo que sufre un color cuando se mezcla con negro.</label>
-            </div>
-        </div>
+            // Q6: Contraste Simultáneo (Explicación fisiológica del ojo)
+            6: `<svg class="w-48 h-48" viewBox="0 0 100 100">
+                    <rect x="0" y="0" width="100" height="100" fill="#ec4899"/> <!-- Magenta -->
+                    <circle cx="50" cy="50" r="28" fill="#1e293b" />
+                    <rect x="42" y="42" width="16" height="16" fill="#808080"/> <!-- Gris Neutro en el centro -->
+                    <circle cx="50" cy="50" r="4" fill="#ffffff" opacity="0.6"/>
+                    <text x="50" y="92" fill="#ffffff" font-size="5" font-weight="bold" text-anchor="middle">El ojo genera verde sobre el gris</text>
+                </svg>`,
 
-        <div class="question">
-            <p>7. ¿Qué nombre recibe el contraste que se basa en el grado de pureza o saturación de los colores, enfrentando tonos vivos contra tonos apagados o desaturados?</p>
-            <div class="options">
-                <label class="option"><input type="radio" name="q7" value="A"> A) Contraste de cantidad</label>
-                <label class="option"><input type="radio" name="q7" value="B"> B) Contraste claro-oscuro</label>
-                <label class="option"><input type="radio" name="q7" value="C"> C) Contraste de calidad (o saturación)</label>
-            </div>
-        </div>
+            // Q7: Contraste Simultáneo (Interactividad interactiva para aislar el fondo)
+            7: `<div class="flex flex-col items-center gap-2">
+                    <div id="simultaneous-box" class="w-44 h-44 bg-[#ff6600] flex items-center justify-center relative rounded-xl border border-slate-700 transition-colors duration-500">
+                        <div id="target-gray" class="w-12 h-12 bg-[#808080] shadow-md transition-transform duration-300"></div>
+                        <span class="absolute top-2 left-2 text-[9px] bg-black/60 px-2 py-0.5 rounded text-white font-mono">Fondo: Naranja</span>
+                    </div>
+                    <button onclick="quiz.toggleSimultaneousBackground()" class="text-[11px] bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-300 border border-indigo-500/20 px-3 py-1.5 rounded-lg font-bold transition">
+                        👁️ Ocultar Fondo (Verificar que el gris es Neutro)
+                    </button>
+                </div>`,
 
-        <div class="question">
-            <p>8. El contraste de cantidad regula las proporciones de los colores en una obra. Si queremos equilibrar visualmente al Amarillo y al Violeta debido a su diferencia de luminosidad inherente, ¿qué relación proporcional aproximada propone la teoría?</p>
-            <div class="options">
-                <label class="option"><input type="radio" name="q8" value="A"> A) 1 parte de Amarillo por 3 partes de Violeta (poca cantidad de amarillo, mucha de violeta).</label>
-                <label class="option"><input type="radio" name="q8" value="B"> B) 3 partes de Amarillo por 1 parte de Violeta.</label>
-                <label class="option"><input type="radio" name="q8" value="C"> C) Partes exactamente iguales (50% y 50%).</label>
-            </div>
-        </div>
+            // Q8: Neutralización por mezcla (Suma pigmentaria de opuestos)
+            8: `<svg class="w-48 h-48" viewBox="0 0 120 120">
+                    <circle cx="45" cy="60" r="32" fill="#3b82f6" opacity="0.85" /> <!-- Azul -->
+                    <circle cx="75" cy="60" r="32" fill="#f97316" opacity="0.85" /> <!-- Naranja -->
+                    <path d="M60,31.7 A32,32 0 0,1 75,60 A32,32 0 0,1 60,88.3 A32,32 0 0,1 45,60 A32,32 0 0,1 60,31.7 Z" fill="#58544c" />
+                    <text x="25" y="110" fill="#3b82f6" font-size="8" font-weight="bold" text-anchor="middle">Azul</text>
+                    <text x="95" y="110" fill="#f97316" font-size="8" font-weight="bold" text-anchor="middle">Naranja</text>
+                    <text x="60" y="64" fill="#ffffff" font-size="7" font-weight="black" text-anchor="middle">GRIS NEUTRO</text>
+                </svg>`,
 
-        <div class="question">
-            <p>9. Si colocamos un cuadrado gris neutro sobre un fondo rojo encendido, por efecto del contraste simultáneo, ¿hacia qué tonalidad tenderá a verse el cuadrado gris?</p>
-            <div class="options">
-                <label class="option"><input type="radio" name="q9" value="A"> A) Hacia el azulado</label>
-                <label class="option"><input type="radio" name="q9" value="B"> B) Hacia el verdoso</label>
-                <label class="option"><input type="radio" name="q9" value="C"> C) Hacia el amarillento</label>
-            </div>
-        </div>
+            // Q9: Jerarquía y porcentajes térmicos (Ejemplo de tienda de campaña naranja en nieve)
+            9: `<svg class="w-full max-w-xs h-36 rounded-xl border border-slate-800" viewBox="0 0 160 100">
+                    <rect x="0" y="0" width="160" height="100" fill="#0f172a" />
+                    <path d="M0,80 Q40,60 80,80 T160,70 L160,100 L0,100 Z" fill="#e0f2fe" />
+                    <polygon points="-10,80 30,30 70,80" fill="#0284c7" opacity="0.4"/>
+                    <polygon points="40,80 90,15 140,80" fill="#0369a1" opacity="0.6"/>
+                    <rect x="100" y="68" width="14" height="14" fill="#ff4500" rx="2" stroke="#ffffff" stroke-width="1"/>
+                    <polygon points="97,68 107,58 117,68" fill="#f97316" />
+                    <circle cx="107" cy="74" r="3" fill="#fef08a" />
+                    <text x="80" y="15" fill="#f1f5f9" font-size="6.5" font-weight="bold" text-anchor="middle">90% Frío (Azul) vs 10% Cálido (Naranja)</text>
+                </svg>`,
 
-        <div class="question">
-            <p>10. ¿Cuál es el resultado cromático ideal cuando se mezclan físicamente (como pigmentos) dos colores perfectamente complementarios en proporciones idóneas?</p>
-            <div class="options">
-                <label class="option"><input type="radio" name="q10" value="A"> A) Un color secundario muy brillante.</label>
-                <label class="option"><input type="radio" name="q10" value="B"> B) Un tono gris-pardo neutro y opaco.</label>
-                <label class="option"><input type="radio" name="q10" value="C"> C) Un color primario saturado.</label>
-            </div>
-        </div>
+            // Q10: Relatividad perceptual del gris (Influencia del entorno claro/oscuro)
+            10: `<svg class="w-48 h-48" viewBox="0 0 120 120">
+                    <rect x="5" y="10" width="52" height="100" fill="#ffffff" rx="4"/>
+                    <rect x="63" y="10" width="52" height="100" fill="#000000" rx="4" stroke="#334155"/>
+                    <rect x="23" y="47" width="16" height="16" fill="#808080" />
+                    <rect x="81" y="47" width="16" height="16" fill="#808080" />
+                    <text x="31" y="90" fill="#0f172a" font-size="6" font-weight="bold" text-anchor="middle">Parece Oscuro</text>
+                    <text x="89" y="90" fill="#ffffff" font-size="6" font-weight="bold" text-anchor="middle">Parece Claro</text>
+                    <text x="60" y="117" fill="#94a3b8" font-size="5.5" font-weight="medium" text-anchor="middle">El gris del centro es el mismo</text>
+                </svg>`,
 
-        <button type="button" class="btn-submit" onclick="calcularResultado()">Enviar Respuestas y Ver Resultado</button>
-    </form>
+            // Q11: Relacionar - Color en sí mismo (Manchas de primarios puros)
+            11: `<svg class="w-48 h-48" viewBox="0 0 100 100">
+                    <circle cx="50" cy="35" r="16" fill="#facc15"/>
+                    <circle cx="32" cy="62" r="16" fill="#ef4444"/>
+                    <circle cx="68" cy="62" r="16" fill="#3b82f6"/>
+                    <circle cx="50" cy="53" r="10" fill="#ffffff" opacity="0.2"/>
+                    <text x="50" y="55" fill="#1e293b" font-size="6" font-weight="black" text-anchor="middle">PRIMARIOS</text>
+                </svg>`,
 
-    <div id="result-container">
-        <h2>Resultados del Examen</h2>
-        <p>Tu puntuación es:</p>
-        <div class="score-display"><span id="score">0</span> / 100</div>
-        <p id="feedback"></p>
-    </div>
-</div>
+            // Q12: Relacionar - Claro-Oscuro (Silueta a contraluz de un faro)
+            12: `<svg class="w-48 h-48 rounded-xl bg-slate-950" viewBox="0 0 100 100">
+                    <polygon points="50,15 0,100 100,100" fill="#fef08a" opacity="0.35" />
+                    <rect x="44" y="35" width="12" height="65" fill="#000000" />
+                    <rect x="42" y="30" width="16" height="5" fill="#1e293b" />
+                    <circle cx="50" cy="22" r="6" fill="#ffffff" />
+                    <circle cx="50" cy="22" r="15" fill="#fef08a" opacity="0.2" />
+                    <text x="50" y="90" fill="#ffffff" font-size="6" text-anchor="middle">Luz vs Sombra</text>
+                </svg>`,
 
-<script>
-    function calcularResultado() {
-        // Respuestas correctas
-        const respuestasCorrectas = {
-            q1: "B",
-            q2: "A",
-            q3: "C",
-            q4: "B",
-            q5: "A",
-            q6: "B",
-            q7: "C",
-            q8: "A",
-            q9: "B",
-            q10: "B"
+            // Q13: Relacionar - Cálido-Frío (Balanza de extremos térmicos)
+            13: `<svg class="w-48 h-48" viewBox="0 0 100 100">
+                    <path d="M0,0 Q50,50 0,100 Z" fill="#ff4500" opacity="0.75" />
+                    <path d="M100,0 Q50,50 100,100 Z" fill="#00ced1" opacity="0.75" />
+                    <line x1="20" y1="50" x2="80" y2="50" stroke="#ffffff" stroke-width="2"/>
+                    <line x1="50" y1="50" x2="50" y2="85" stroke="#ffffff" stroke-width="2"/>
+                    <path d="M30,42 Q35,30 30,22 Q25,30 30,42 Z" fill="#ef4444" />
+                    <rect x="65" y="27" width="10" height="10" fill="#e0f2fe" rx="1"/>
+                </svg>`,
+
+            // Q14: Relacionar - Complementarios (Línea de opuestos en el círculo)
+            14: `<svg class="w-48 h-48" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="42" fill="none" stroke="#475569" stroke-width="2" stroke-dasharray="2 2"/>
+                    <circle cx="50" cy="14" r="8" fill="#facc15" /> <!-- Amarillo -->
+                    <circle cx="50" cy="86" r="8" fill="#8b5cf6" /> <!-- Violeta -->
+                    <line x1="50" y1="22" x2="50" y2="78" stroke="#ffffff" stroke-width="1.5" stroke-dasharray="4 4" />
+                    <text x="50" y="53" fill="#94a3b8" font-size="6.5" font-weight="bold" text-anchor="middle">OPUESTOS</text>
+                </svg>`,
+
+            // Q15: Relacionar - Simultáneo (Inducción recíproca sobre gris idéntico)
+            15: `<svg class="w-full max-w-xs h-32" viewBox="0 0 200 80">
+                    <rect x="10" y="10" width="80" height="60" fill="#8b5cf6" rx="6" />
+                    <rect x="110" y="10" width="80" height="60" fill="#facc15" rx="6" />
+                    <circle cx="50" cy="40" r="10" fill="#808080" />
+                    <circle cx="150" cy="40" r="10" fill="#808080" />
+                    <text x="50" y="65" fill="#ffffff" font-size="5.5" text-anchor="middle">Se tiñe de Amarillo</text>
+                    <text x="150" y="65" fill="#0f172a" font-size="5.5" text-anchor="middle">Se tiñe de Violeta</text>
+                </svg>`
         };
 
-        let puntos = 0;
-        const form = document.getElementById('quiz-form');
-        const formData = new FormData(form);
+        const questions = [
+            {
+                type: 'multiple',
+                question: "¿Cuál es el número total de contrastes de color definidos por Johannes Itten en su obra teórica?",
+                options: [
+                    { text: "5 contrastes", correct: false },
+                    { text: "7 contrastes (Color en sí mismo, Claro-Oscuro, Temperatura, Complementarios, Simultáneo, Cualitativo y Cuantitativo)", correct: true },
+                    { text: "3 contrastes principales", correct: false },
+                    { text: "12 contrastes correspondientes a los segmentos del círculo", correct: false }
+                ],
+                feedback: "Itten determinó exactamente 7 contrastes fundamentales para estructurar la percepción cromática, incluyendo los contrastes Cualitativo (saturación) y Cuantitativo (proporciones de superficie).",
+                visualId: 1
+            },
+            {
+                type: 'multiple',
+                question: "En el 'Contraste del Color en sí mismo', ¿qué conjunto de colores genera la mayor fuerza visual y tensión cromática?",
+                options: [
+                    { text: "Naranja, Verde y Violeta (Secundarios)", correct: false },
+                    { text: "Blanco, Negro y Gris", correct: false },
+                    { text: "Amarillo, Rojo y Azul (Primarios en su máxima pureza)", correct: true },
+                    { text: "Colores terciarios combinados con pasteles", correct: false }
+                ],
+                feedback: "El contraste del color en sí mismo es la yuxtaposición de colores puros y luminosos. El punto máximo de tensión se logra siempre usando los tres primarios puros sin modular.",
+                visualId: 2
+            },
+            {
+                type: 'multiple',
+                question: "El contraste 'Cálido-Frío' no solo es visual, sino también una experiencia subjetiva térmica. ¿Cuál es el eje de máxima oposición térmica en el círculo cromático de Itten?",
+                options: [
+                    { text: "Amarillo (claro) vs Violeta (oscuro)", correct: false },
+                    { text: "Rojo-Anaranjado (más cálido) vs Azul-Verde (más frío)", correct: true },
+                    { text: "Blanco vs Negro", correct: false },
+                    { text: "Verde vs Amarillo", correct: false }
+                ],
+                feedback: "El rojo-anaranjado representa el extremo de la radiación térmica (fuego), mientras que el azul-verde representa la máxima absorción fría (hielo/agua).",
+                visualId: 3
+            },
+            {
+                type: 'multiple',
+                question: "¿Cuál es el factor determinante para construir un 'Contraste Claro-Oscuro'?",
+                options: [
+                    { text: "La diferencia de saturación del pigmento", correct: false },
+                    { text: "La diferencia de luminosidad o valor tonal propio entre los colores yuxtapuestos", correct: true },
+                    { text: "El uso exclusivo de pigmentación blanca y negra pura", correct: false },
+                    { text: "La vibración óptica en los bordes", correct: false }
+                ],
+                feedback: "Este contraste se basa en la escala de valores tonales. El amarillo (el color más claro) y el violeta (el más oscuro) forman la máxima tensión de claro-oscuro de origen cromático.",
+                visualId: 4
+            },
+            {
+                type: 'multiple',
+                question: "Si colocamos un círculo Rojo Puro sobre un fondo plano Verde Puro, ¿qué fenómeno ocurre según el 'Contraste de Complementarios'?",
+                options: [
+                    { text: "Los colores se anulan mutuamente volviéndose grises ante el ojo", correct: false },
+                    { text: "Se genera una vibración óptica intensa que resalta y exalta la pureza de ambos", correct: true },
+                    { text: "El rojo absorbe al verde haciéndolo parecer amarillento", correct: false },
+                    { text: "El verde parece perder toda su luminosidad", correct: false }
+                ],
+                feedback: "Los complementarios puros yuxtapuestos se exaltan mutuamente en brillantez y vivacidad, generando un límite de vibración óptica altamente estimulante.",
+                visualId: 5
+            },
+            {
+                type: 'multiple',
+                question: "El 'Contraste Simultáneo' es una propiedad fisiológica de la visión humana. Esto sucede porque nuestro ojo, ante un color determinado, exige ópticamente:",
+                options: [
+                    { text: "Un color complementario de igual brillo para alcanzar un estado de equilibrio óptico", correct: true },
+                    { text: "Mayor cantidad de luz blanca para relajar la retina", correct: false },
+                    { text: "Que el color del objeto se desature inmediatamente", correct: false },
+                    { text: "Ver únicamente negro a su alrededor", correct: false }
+                ],
+                feedback: "Es una respuesta neurológica y biológica de la retina: al percibir un color, el cerebro busca instintivamente equilibrarlo proyectando simultáneamente su color complementario sobre las áreas neutras adyacentes.",
+                visualId: 6
+            },
+            {
+                type: 'multiple',
+                question: "Si colocas un cuadrado gris neutro sobre un fondo naranja saturado, ¿de qué tonalidad parecerá teñirse ópticamente el gris?",
+                options: [
+                    { text: "Azulado (el complementario del naranja)", correct: true },
+                    { text: "Rojizo (por adición física)", correct: false },
+                    { text: "Amarillento (por proximidad térmica)", correct: false },
+                    { text: "Se mantendrá perfectamente gris sin cambio alguno", correct: false }
+                ],
+                feedback: "Debido al contraste simultáneo, el ojo proyecta el complementario del naranja (el azul) sobre el gris neutro, haciéndolo lucir frío y azulado artificialmente.",
+                visualId: 7
+            },
+            {
+                type: 'multiple',
+                question: "Al mezclar físicamente pigmentos de dos colores complementarios (por ejemplo, Azul y Naranja) en proporciones equilibradas, ¿qué sucede con la mezcla?",
+                options: [
+                    { text: "Se genera un color ultra-saturado y fluorescente", correct: false },
+                    { text: "Se destruye la saturación dando origen a un gris neutro quebrado o tono tierra", correct: true },
+                    { text: "Se obtiene luz blanca pura", correct: false },
+                    { text: "Los pigmentos se repelen y no se pueden unificar", correct: false }
+                ],
+                feedback: "Mientras que la yuxtaposición exalta, la mezcla física de complementarios anula sus propiedades cromáticas, produciendo tonos grises apagados o tierras neutrales.",
+                visualId: 8
+            },
+            {
+                type: 'multiple',
+                question: "Diseñas un paisaje invernal con un 90% de tonos azules y blancos (fríos). Para generar un punto de enfoque de máxima atención, decides pintar una tienda de campaña de color Naranja. ¿Qué contrastes estás activando?",
+                options: [
+                    { text: "Contraste de Temperatura y de Complementarios simultáneamente", correct: true },
+                    { text: "Únicamente contraste Claro-Oscuro elemental", correct: false },
+                    { text: "Contraste Cualitativo únicamente", correct: false },
+                    { text: "Contraste Simultáneo exclusivo", correct: false }
+                ],
+                feedback: "Se activan dos contrastes potentes: el de temperatura (frío del entorno contra el calor del naranja) y el de complementarios (el azul del paisaje es el opuesto directo del naranja).",
+                visualId: 9
+            },
+            {
+                type: 'multiple',
+                question: "¿Por qué el 'Contraste Simultáneo' se considera un fenómeno puramente óptico/subjetivo y no una propiedad física del pigmento?",
+                options: [
+                    { text: "Porque la alteración del color ocurre solo en la retina y el cerebro del observador, no en el material real", correct: true },
+                    { text: "Porque se requiere de pantallas digitales especiales para apreciarlo", correct: false },
+                    { text: "Porque varía dependiendo del estado emocional de los alumnos", correct: false },
+                    { text: "Porque Itten lo descubrió por accidente en un laboratorio fotográfico", correct: false }
+                ],
+                feedback: "El color del pigmento del objeto no cambia físicamente. Es el sistema neurológico del observador el que genera la inducción cromática para regular la fatiga ocular.",
+                visualId: 10
+            },
+            {
+                type: 'match',
+                concept: "Contraste de Color en sí mismo",
+                definition: "La fuerza de expresión que surge de la yuxtaposición de colores puros, saturados y luminosos en su estado de máxima intensidad.",
+                feedback: "Es el contraste de la abundancia cromática, característico de las vanguardias como el Fauvismo o el Arte Pop.",
+                visualId: 11
+            },
+            {
+                type: 'match',
+                concept: "Contraste Claro-Oscuro",
+                definition: "La relación que se establece a partir del grado de luminosidad y valor tonal de las superficies, independientemente de su matiz.",
+                feedback: "Es clave para generar tridimensionalidad, volumen y claroscuro dramático en el espacio pictórico.",
+                visualId: 12
+            },
+            {
+                type: 'match',
+                concept: "Contraste Cálido-Frío",
+                definition: "La oposición basada en las sensaciones psicofisiológicas de temperatura que evocan los colores en nuestra mente.",
+                feedback: "Se asocia visualmente con el efecto de proximidad (los cálidos avanzan hacia el espectador; los fríos retroceden).",
+                visualId: 13
+            },
+            {
+                type: 'match',
+                concept: "Contraste Complementario",
+                definition: "El equilibrio que se logra al confrontar dos colores situados en puntos diametralmente opuestos dentro del círculo cromático.",
+                feedback: "Al estar juntos se exigen recíprocamente y alcanzan su máxima brillantez sin destruirse.",
+                visualId: 14
+            },
+            {
+                type: 'match',
+                concept: "Contraste Simultáneo",
+                definition: "El fenómeno por el cual el ojo y el cerebro exigen el complementario de un color real y lo proyectan sobre las áreas grises o neutras contiguas.",
+                feedback: "Este principio demuestra la relatividad del color: ningún color se ve de forma aislada, siempre es afectado por su entorno.",
+                visualId: 15
+            }
+        ];
 
-        // Validar que se hayan respondido todas
-        let respondidas = 0;
-        for (let i = 1; i <= 10; i++) {
-            if (formData.get('q' + i)) {
-                respondidas++;
+        class Quiz {
+            constructor() {
+                this.currentIdx = 0;
+                this.score = 0;
+                this.answered = false;
+                this.isSimultaneousBgHidden = false; // Estado interactivo especial para Q7
+            }
+
+            // Inicia el cuestionario ocultando la pantalla inicial
+            start() {
+                document.getElementById('start-screen').classList.add('hidden');
+                document.getElementById('question-area').classList.remove('hidden');
+                this.render();
+            }
+
+            // Renderiza la pregunta actual y sus opciones correspondientes
+            render() {
+                const q = questions[this.currentIdx];
+                this.answered = false;
+                this.isSimultaneousBgHidden = false;
+                
+                // Actualiza el indicador de progreso y marcador
+                const progress = (this.currentIdx / questions.length) * 100;
+                document.getElementById('progress').style.width = `${progress}%`;
+                document.getElementById('question-number').innerText = `Reactivo ${this.currentIdx + 1} de ${questions.length}`;
+                document.getElementById('score-tracker').innerText = `Puntos: ${this.score}`;
+
+                // Inyección del soporte visual SVG asignado
+                const visualAid = document.getElementById('visual-aid');
+                if (q.visualId && VISUALS[q.visualId]) {
+                    visualAid.innerHTML = VISUALS[q.visualId];
+                    visualAid.classList.remove('hidden');
+                } else {
+                    visualAid.classList.add('hidden');
+                }
+
+                // Ajusta el encabezado de la pregunta según el tipo (opción múltiple o relacionar)
+                document.getElementById('question-text').innerText = q.type === 'multiple' 
+                    ? q.question 
+                    : `Relaciona el concepto con su definición correcta: \n"${q.concept}"`;
+                
+                // Oculta el panel de retroalimentación
+                document.getElementById('feedback').classList.add('hidden');
+
+                // Renderizado de las tarjetas de opciones
+                const grid = document.getElementById('options-grid');
+                grid.innerHTML = '';
+
+                if (q.type === 'multiple') {
+                    q.options.forEach((opt, index) => {
+                        const btn = document.createElement('button');
+                        btn.className = "contrast-card w-full text-left p-4 bg-slate-800/60 border border-slate-700/60 rounded-2xl hover:border-indigo-500 hover:bg-slate-800 hover:text-white transition font-medium text-xs md:text-sm text-slate-300 active:scale-[0.99] flex items-center";
+                        btn.innerHTML = `<span class="inline-block w-6 h-6 rounded-lg bg-slate-900 border border-slate-750 text-center text-xs font-bold leading-6 mr-3 text-slate-400 flex-shrink-0">${String.fromCharCode(65 + index)}</span><span class="flex-grow">${opt.text}</span>`;
+                        btn.onclick = () => this.checkMultiple(index, btn);
+                        grid.appendChild(btn);
+                    });
+                } else {
+                    const correctDefinition = q.definition;
+                    const matchOptions = [correctDefinition];
+                    
+                    // Extrae definiciones alternativas para generar la dificultad
+                    const otherDefs = questions
+                        .filter(item => item.definition && item.definition !== correctDefinition)
+                        .map(item => item.definition);
+                    
+                    // Mezcla y añade hasta 3 definiciones erróneas como distractoras
+                    const shuffledOthers = otherDefs.sort(() => Math.random() - 0.5);
+                    for (let i = 0; i < Math.min(3, shuffledOthers.length); i++) {
+                        matchOptions.push(shuffledOthers[i]);
+                    }
+
+                    // Mezcla las opciones finales que se presentarán
+                    matchOptions.sort(() => Math.random() - 0.5);
+
+                    matchOptions.forEach((opt, index) => {
+                        const btn = document.createElement('button');
+                        btn.className = "contrast-card w-full text-left p-4 bg-slate-800/60 border border-slate-700/60 rounded-2xl hover:border-indigo-500 hover:bg-slate-800 hover:text-white transition text-xs md:text-sm text-slate-300 active:scale-[0.99] flex items-center";
+                        btn.innerHTML = `<span class="inline-block w-6 h-6 rounded-lg bg-slate-900 border border-slate-750 text-center text-xs font-bold leading-6 mr-3 text-slate-400 flex-shrink-0">${index + 1}</span><span class="flex-grow">${opt}</span>`;
+                        btn.onclick = () => this.checkMatch(opt, correctDefinition, btn);
+                        grid.appendChild(btn);
+                    });
+                }
+            }
+
+            // Alterna el color de fondo para que el estudiante verifique que el gris no cambia físicamente
+            toggleSimultaneousBackground() {
+                const bgBox = document.getElementById('simultaneous-box');
+                const target = document.getElementById('target-gray');
+                if (!bgBox || !target) return;
+
+                if (this.isSimultaneousBgHidden) {
+                    bgBox.style.backgroundColor = '#ff6600';
+                    this.isSimultaneousBgHidden = false;
+                } else {
+                    bgBox.style.backgroundColor = '#0b0f19'; // Oculta fundiendo con el fondo del body
+                    this.isSimultaneousBgHidden = true;
+                }
+            }
+
+            // Valida respuestas en reactivos de opción múltiple
+            checkMultiple(idx, selectedBtn) {
+                if (this.answered) return;
+                this.answered = true;
+                
+                const q = questions[this.currentIdx];
+                const isCorrect = q.options[idx].correct;
+                
+                const buttons = document.querySelectorAll('#options-grid button');
+                buttons.forEach((btn, bIdx) => {
+                    btn.disabled = true;
+                    if (q.options[bIdx].correct) {
+                        btn.classList.add('border-emerald-500', 'bg-emerald-500/10', 'text-emerald-300');
+                    } else {
+                        btn.classList.add('opacity-40');
+                    }
+                });
+
+                if (!isCorrect) {
+                    selectedBtn.classList.remove('opacity-40');
+                    selectedBtn.classList.add('border-rose-500', 'bg-rose-500/10', 'text-rose-300');
+                }
+
+                this.showFeedback(isCorrect, q.feedback);
+            }
+
+            // Valida respuestas en reactivos de relacionar conceptos
+            checkMatch(selected, correct, selectedBtn) {
+                if (this.answered) return;
+                this.answered = true;
+                
+                const q = questions[this.currentIdx];
+                const isCorrect = selected === correct;
+                
+                const buttons = document.querySelectorAll('#options-grid button');
+                buttons.forEach((btn) => {
+                    btn.disabled = true;
+                    const optionContent = btn.querySelector('.flex-grow').innerText.trim();
+                    if (optionContent === correct.trim()) {
+                        btn.classList.add('border-emerald-500', 'bg-emerald-500/10', 'text-emerald-300');
+                    } else {
+                        btn.classList.add('opacity-40');
+                    }
+                });
+
+                if (!isCorrect) {
+                    selectedBtn.classList.remove('opacity-40');
+                    selectedBtn.classList.add('border-rose-500', 'bg-rose-500/10', 'text-rose-300');
+                }
+
+                this.showFeedback(isCorrect, q.feedback);
+            }
+
+            // Muestra el bloque de retroalimentación pedagógica
+            showFeedback(isCorrect, text) {
+                const fb = document.getElementById('feedback');
+                const fbIcon = document.getElementById('feedback-icon');
+                const fbTitle = document.getElementById('feedback-title');
+                const fbText = document.getElementById('feedback-text');
+                
+                fb.classList.remove('hidden');
+                
+                if (isCorrect) {
+                    this.score++;
+                    fb.className = "mt-6 p-5 rounded-2xl bg-emerald-500/10 border-emerald-500/20 text-emerald-300";
+                    fbIcon.innerHTML = "✨";
+                    fbTitle.innerText = "¡Excelente observación! (+1 punto)";
+                } else {
+                    fb.className = "mt-6 p-5 rounded-2xl bg-rose-500/10 border-rose-500/20 text-rose-300";
+                    fbIcon.innerHTML = "💡";
+                    fbTitle.innerText = "Sigue analizando la teoría:";
+                }
+                fbText.innerHTML = text;
+                document.getElementById('score-tracker').innerText = `Puntos: ${this.score}`;
+                
+                // Desplazamiento suave para visibilizar la explicación teórica en móviles
+                setTimeout(() => {
+                    fb.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+            }
+
+            // Avanza al siguiente reactivo o finaliza la prueba
+            next() {
+                this.currentIdx++;
+                if (this.currentIdx < questions.length) {
+                    this.render();
+                } else {
+                    this.finish();
+                }
+            }
+
+            // Finaliza la sesión del cuestionario y renderiza el dictamen de retroalimentación global
+            finish() {
+                document.getElementById('question-area').classList.add('hidden');
+                document.getElementById('progress').style.width = `100%`;
+                
+                const resultScreen = document.getElementById('result-screen');
+                resultScreen.classList.remove('hidden');
+                
+                document.getElementById('final-score').innerText = this.score;
+
+                const rTitle = document.getElementById('result-title');
+                const rMsg = document.getElementById('result-msg');
+
+                if (this.score >= 13) {
+                    rTitle.className = "text-xl font-bold text-emerald-400";
+                    rTitle.innerText = "🏆 ¡Maestro de la Bauhaus!";
+                    rMsg.innerText = "Tienes una sensibilidad extraordinaria para la relatividad del color. Johannes Itten estaría orgulloso de tu capacidad de análisis visual y de tu dominio sobre la interacción cromática.";
+                } else if (this.score >= 9) {
+                    rTitle.className = "text-xl font-bold text-indigo-400";
+                    rTitle.innerText = "🎨 Gran Percepción Cromática";
+                    rMsg.innerText = "Demuestras un excelente entendimiento de cómo interactúan los contrastes. Tu ojo artístico identifica con facilidad el comportamiento de la temperatura y la luminosidad.";
+                } else {
+                    rTitle.className = "text-xl font-bold text-amber-400";
+                    rTitle.innerText = "👀 Desarrollando la Visión";
+                    rMsg.innerText = "Sigue observando tu entorno. El color no es absoluto; depende totalmente de los tonos que lo rodean. Vuelve a repasar los efectos de inducción óptica del contraste simultáneo.";
+                }
             }
         }
 
-        if (respondidas < 10) {
-            alert("Por favor, responde todas las preguntas antes de enviar.");
-            return;
-        }
-
-        // Calcular puntaje
-        for (let key in respuestasCorrectas) {
-            if (formData.get(key) === respuestasCorrectas[key]) {
-                puntos += 10;
-            }
-        }
-
-        // Mostrar contenedor de resultados
-        const resultContainer = document.getElementById('result-container');
-        const scoreSpan = document.getElementById('score');
-        const feedbackP = document.getElementById('feedback');
-
-        scoreSpan.textContent = puntos;
-        resultContainer.style.display = 'block';
-
-        // Estilos dinámicos de retroalimentación
-        if (puntos >= 70) {
-            resultContainer.className = "success";
-            feedbackP.innerHTML = "<strong>¡Excelente trabajo!</strong> Tienes un gran dominio de la teoría de los contrastes cromáticos de Itten.";
-        } else {
-            resultContainer.className = "regular";
-            feedbackP.innerHTML = "<strong>Buen intento.</strong> Te sugiero repasar los conceptos de los 7 contrastes de color para mejorar tu puntaje.";
-        }
-
-        // Hacer scroll suave hacia el resultado
-        resultContainer.scrollIntoView({ behavior: 'smooth' });
-    }
-</script>
-
-</body>
-</html>
+        // Instanciación global de la lógica del cuestionario al cargar el DOM
+        const quiz = new Quiz();
+    </script>
