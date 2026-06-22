@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Ahorcado de Itten: Los 7 Contrastes</title>
+    <style>
+        /* TEORÍA DEL COLOR EN ACCIÓN: Contraste de Claro-Oscuro y Color en Sí Mismo */
+        :root {
+            --bg-color: #121214;       /* Fondo oscuro profundo */
+            --surface-color: #1e1e24;  /* Gris cromático oscuro */
+            --primary-yellow: #FFD700; /* Amarillo saturado (Luz / Itten) */
+            --primary-blue: #0055ff;   /* Azul saturado (Frío) */
+            --primary-red: #ff3344;    /* Rojo saturado (Cálido) */
+            --text-light: #f5f5f7;     /* Blanco puro para legibilidad */
+            --text-muted: #a0a0aa;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-light);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 4px solid var(--primary-yellow);
+            padding-bottom: 10px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        h1 {
+            color: var(--primary-yellow);
+            margin: 0;
+            font-size: 2.2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 0px var(--primary-blue);
+        }
+
+        p.subtitle {
+            color: var(--text-muted);
+            font-style: italic;
+            margin: 5px 0 0 0;
+        }
+
+        .game-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .panel {
+            background-color: var(--surface-color);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid #333;
+        }
+
+        /* Marcador de Estado */
+        .scoreboard {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-bottom: 15px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .score-box {
+            padding: 8px 12px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        .score-box.points { background-color: rgba(0, 85, 255, 0.2); border: 1px solid var(--primary-blue); color: #88b3ff; }
+        .score-box.errors { background-color: rgba(255, 51, 68, 0.2); border: 1px solid var(--primary-red); color: #ff8894; }
+        .score-box.progress { background-color: rgba(255, 215, 0, 0.2); border: 1px solid var(--primary-yellow); color: #ffe875; }
+
+        /* Lienzo del Ahorcado (Contraste Cualitativo/Línea) */
+        canvas {
+            background-color: #17171c;
+            border-radius: 8px;
+            border: 2px solid #2a2a35;
+            margin-bottom: 20px;
+        }
+
+        /* Palabra Secreta */
+        .word-display {
+            font-size: 2rem;
+            letter-spacing: 12px;
+            margin: 20px 0;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: var(--primary-yellow);
+            min-height: 40px;
+            text-align: center;
+        }
+
+        .hint-display {
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            text-align: center;
+            min-height: 24px;
+        }
+
+        /* Teclado Virtual */
+        .keyboard {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .key {
+            background-color: #2a2a35;
+            color: var(--text-light);
+            border: none;
+            padding: 12px 0;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+        }
+
+        .key:hover:not(:disabled) {
+            background-color: var(--primary-blue);
+            transform: translateY(-2px);
+        }
+
+        .key:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .key.correct {
+            background-color: rgba(0, 200, 100, 0.4);
+            border: 2px solid #00c864;
+            color: #00c864;
+        }
+
+        .key.wrong {
+            background-color: rgba(255, 51, 68, 0.4);
+            border: 2px solid var(--primary-red);
+            color: var(--primary-red);
+        }
+
+        /* Pantalla Final Absoluta */
+        .game-over-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(18, 18, 20, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .game-over-screen.show {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .results-card {
+            background-color: var(--surface-color);
+            padding: 40px;
+            border-radius: 16px;
+            border: 4px solid var(--primary-yellow);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
+        }
+
+        .results-card h2 {
+            font-size: 2.5rem;
+            margin-top: 0;
+            text-transform: uppercase;
+        }
+
+        .results-card .win-title { color: var(--primary-yellow); }
+        .results-card .lose-title { color: var(--primary-red); }
+
+        .stat-line {
+            font-size: 1.3rem;
+            margin: 15px 0;
+            color: var(--text-light);
+        }
+
+        .stat-line strong {
+            color: var(--primary-blue);
+        }
+
+        .no-retry-msg {
+            margin-top: 30px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid #333;
+            padding-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>El Ahorcado del Color</h1>
+        <p class="subtitle">Los 7 Contrastes de Johannes Itten</p>
+    </header>
+
+    <div class="game-container">
+        <div class="panel">
+            <canvas id="hangmanCanvas" width="250" height="280"></canvas>
+            <div class="scoreboard">
+                <div class="score-box points">Puntos: <span id="pointsDisplay">0</span></div>
+                <div class="score-box errors">Letras Incorrectas: <span id="errorsDisplay">0</span></div>
+            </div>
+            <div class="score-box progress" style="width: 80%;">Palabras: <span id="wordProgressDisplay">1/10</span></div>
+        </div>
+
+        <div class="panel">
+            <div class="word-display" id="wordDisplay">_ _ _ _ _</div>
+            <div class="hint-display" id="hintDisplay">Pista aquí</div>
+            
+            <div class="keyboard" id="keyboard">
+                </div>
+        </div>
+    </div>
+
+    <div class="game-over-screen" id="gameOverScreen">
+        <div class="results-card">
+            <h2 id="endTitle" class="win-title">¡Fin del Juego!</h2>
+            <p class="stat-line">Puntaje Obtenido: <strong id="finalPoints" style="color:var(--primary-yellow)">0</strong> puntos</p>
+            <p class="stat-line">Total de Letras Incorrectas: <strong id="finalErrors" style="color:var(--primary-red)">0</strong></p>
+            <p class="stat-line">Palabras Acertadas: <strong id="finalWords">0</strong> / 10</p>
+            <p class="no-retry-msg">El juego ha finalizado por completo. Para volver a jugar, un administrador debe recargar la aplicación.</p>
+        </div>
+    </div>
+
+    <script>
+        // 1. Banco de 10 palabras sobre los contrastes de Johannes Itten
+        const wordBank = [
+            { word: "SATURACION", hint: "Contraste entre colores puros/intensos y colores apagados o neutros." },
+            { word: "COMPLEMENTARIOS", hint: "Contraste de dos colores opuestos diametralmente en el círculo cromático." },
+            { word: "CLAROOSCURO", hint: "Contraste basado en la diferencia de luminosidad o valor de los colores." },
+            { word: "SIMULTANEO", hint: "Efecto óptico donde nuestro ojo exige el complementario al ver un color." },
+            { word: "CANTIDAD", hint: "Contraste que altera las proporciones de tamaño entre dos o más colores." },
+            { word: "CALIDOFRIO", hint: "Contraste basado en la temperatura térmica y óptica de los colores." },
+            { word: "SIMISMO", hint: "Contraste de color en [...]: usa colores puros al 100% de saturación." },
+            { word: "BAUHAUS", hint: "Escuela de diseño y arte donde Johannes Itten desarrolló su teoría del color." },
+            { word: "PRIMARIOS", hint: "Rojo, amarillo y azul. Base fundamental del círculo de Itten." },
+            { word: "CROMATICO", hint: "Círculo de 12 colores que Itten estructuró para su enseñanza." }
+        ];
+
+        // Estado del juego
+        let currentWordIndex = 0;
+        let currentWord = "";
+        let currentHint = "";
+        let guessedLetters = [];
+        let totalPoints = 0;
+        let totalIncorrectLetters = 0; // Criterio de desempate global
+        let currentWordWrongGuesses = 0; // Para el dibujo actual del ahorcado
+        const maxWrongGuesses = 6; // Cabeza, tronco, brazo izq, brazo der, pierna izq, pierna der.
+
+        // Elementos DOM
+        const wordDisplay = document.getElementById("wordDisplay");
+        const hintDisplay = document.getElementById("hintDisplay");
+        const keyboard = document.getElementById("keyboard");
+        const pointsDisplay = document.getElementById("pointsDisplay");
+        const errorsDisplay = document.getElementById("errorsDisplay");
+        const wordProgressDisplay = document.getElementById("wordProgressDisplay");
+        const gameOverScreen = document.getElementById("gameOverScreen");
+        const endTitle = document.getElementById("endTitle");
+        const finalPoints = document.getElementById("finalPoints");
+        const finalErrors = document.getElementById("finalErrors");
+        const finalWords = document.getElementById("finalWords");
+        
+        // Canvas Setup
+        const canvas = document.getElementById("hangmanCanvas");
+        const ctx = canvas.getContext("2d");
+
+        // Inicializar el juego
+        function initGame() {
+            createKeyboard();
+            loadWord();
+            drawHangman(0);
+        }
+
+        // Crear teclado de la A a la Z
+        function createKeyboard() {
+            keyboard.innerHTML = "";
+            const letters = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+            for (let letter of letters) {
+                const button = document.createElement("button");
+                button.textContent = letter;
+                button.classList.add("key");
+                button.addEventListener("click", () => handleGuess(letter, button));
+                keyboard.appendChild(button);
+            }
+        }
+
+        // Cargar palabra actual
+        function loadWord() {
+            if (currentWordIndex >= wordBank.length) {
+                endGame(true); // Se acabaron las 10 palabras
+                return;
+            }
+
+            currentWord = wordBank[currentWordIndex].word;
+            currentHint = wordBank[currentWordIndex].hint;
+            guessedLetters = [];
+            currentWordWrongGuesses = 0;
+            
+            wordProgressDisplay.textContent = `${currentWordIndex + 1} / ${wordBank.length}`;
+            hintDisplay.textContent = `Pista: ${currentHint}`;
+            
+            // Habilitar y limpiar teclado para la nueva palabra
+            const keys = keyboard.querySelectorAll(".key");
+            keys.forEach(key => {
+                key.disabled = false;
+                key.className = "key";
+            });
+
+            updateWordDisplay();
+            drawHangman(0);
+        }
+
+        // Actualizar visualización de la palabra secreta
+        function updateWordDisplay() {
+            let display = "";
+            for (let letter of currentWord) {
+                if (guessedLetters.includes(letter)) {
+                    display += letter + " ";
+                } else {
+                    display += "_ ";
+                }
+            }
+            wordDisplay.textContent = display.trim();
+        }
+
+        // Manejar el intento del usuario al presionar una letra
+        function handleGuess(letter, button) {
+            button.disabled = true;
+
+            if (currentWord.includes(letter)) {
+                guessedLetters.push(letter);
+                button.classList.add("correct");
+                updateWordDisplay();
+
+                // Verificar si se completó la palabra
+                if (checkWin()) {
+                    totalPoints += 10; // Regla 2: 10 puntos por palabra acertada
+                    pointsDisplay.textContent = totalPoints;
+                    currentWordIndex++;
+                    setTimeout(loadWord, 1000); // Pasar a la siguiente palabra
+                }
+            } else {
+                button.classList.add("wrong");
+                currentWordWrongGuesses++;
+                totalIncorrectLetters++; // Regla 3: Contador general para desempate
+                errorsDisplay.textContent = totalIncorrectLetters;
+                
+                // Regla 4: Se va formando el ahorcado
+                drawHangman(currentWordWrongGuesses);
+
+                if (currentWordWrongGuesses >= maxWrongGuesses) {
+                    // Regla 5: Si se forma el ahorcado completo, termina el juego inmediatamente
+                    setTimeout(() => endGame(false), 500);
+                }
+            }
+        }
+
+        // Verificar si se descubrieron todas las letras
+        function checkWin() {
+            for (let letter of currentWord) {
+                if (!guessedLetters.includes(letter)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        // Regla 6: Desplegar resultados finales y bloquear el juego (sin permitir reiniciar)
+        function endGame(completedAll) {
+            // Deshabilitar todas las teclas por seguridad
+            const keys = keyboard.querySelectorAll(".key");
+            keys.forEach(key => key.disabled = true);
+
+            if (completedAll) {
+                endTitle.textContent = "¡Reto Completado!";
+                endTitle.className = "win-title";
+            } else {
+                endTitle.textContent = "¡Ahorcado!";
+                endTitle.className = "lose-title";
+            }
+
+            // Calcular palabras correctas basadas en los puntos (10 pts c/u)
+            const correctWordsCount = totalPoints / 10;
+
+            finalPoints.textContent = totalPoints;
+            finalErrors.textContent = totalIncorrectLetters;
+            finalWords.textContent = correctWordsCount;
+
+            gameOverScreen.classList.add("show");
+        }
+
+        // Canvas: Dibujar la silueta (Regla 4) con estética de contraste lineal
+        function drawHangman(step) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Estilo de la horca (Color Azul Itten)
+            ctx.strokeStyle = "#0055ff";
+            ctx.lineWidth = 4;
+            ctx.lineCap = "round";
+
+            // Base de la horca siempre visible
+            ctx.beginPath();
+            ctx.moveTo(20, 250);
+            ctx.lineTo(100, 250);
+            ctx.moveTo(60, 250);
+            ctx.lineTo(60, 30);
+            ctx.lineTo(160, 30);
+            ctx.lineTo(160, 60);
+            ctx.stroke();
+
+            // Elementos del cuerpo (Color Rojo Itten para generar alto contraste)
+            ctx.strokeStyle = "#ff3344";
+            ctx.lineWidth = 3;
+
+            if (step >= 1) { // 1. Cabeza
+                ctx.beginPath();
+                ctx.arc(160, 80, 20, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+            if (step >= 2) { // 2. Tronco
+                ctx.beginPath();
+                ctx.moveTo(160, 100);
+                ctx.lineTo(160, 170);
+                ctx.stroke();
+            }
+            if (step >= 3) { // 3. Brazo izquierdo
+                ctx.beginPath();
+                ctx.moveTo(160, 120);
+                ctx.lineTo(130, 140);
+                ctx.stroke();
+            }
+            if (step >= 4) { // 4. Brazo derecho
+                ctx.beginPath();
+                ctx.moveTo(160, 120);
+                ctx.lineTo(190, 140);
+                ctx.stroke();
+            }
+            if (step >= 5) { // 5. Pierna izquierda
+                ctx.beginPath();
+                ctx.moveTo(160, 170);
+                ctx.lineTo(135, 220);
+                ctx.stroke();
+            }
+            if (step >= 6) { // 6. Pierna derecha (Fin)
+                ctx.beginPath();
+                ctx.moveTo(160, 170);
+                ctx.lineTo(185, 220);
+                ctx.stroke();
+            }
+        }
+
+        // Arrancar el software educativo al cargar
+        window.onload = initGame;
+    </script>
+</body>
+</html>
